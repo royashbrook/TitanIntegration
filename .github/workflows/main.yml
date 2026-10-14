@@ -1,0 +1,19 @@
+name: PSGallery
+on:
+  release:
+    types: [released]
+permissions:
+  contents: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - shell: pwsh
+        run: |
+          Install-Module DataAgent -RequiredVersion 0.7.5 -Scope CurrentUser -Force
+          Install-Module Add-PrefixForLogging -RequiredVersion 1.0.0.3 -Scope CurrentUser -Force
+          Install-Module Clear-Files -RequiredVersion 1.2.0.0 -Scope CurrentUser -Force
+          Publish-Module -Path TitanIntegration -NuGetApiKey ${{ secrets.PS_GALLERY_KEY }}

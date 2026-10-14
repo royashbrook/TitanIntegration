@@ -1,0 +1,23 @@
+name: Tests
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - run: |
+          Install-Module DataAgent -RequiredVersion 0.7.5 -Scope CurrentUser -Force
+          Install-Module Add-PrefixForLogging -RequiredVersion 1.0.0.3 -Scope CurrentUser -Force
+          Install-Module Clear-Files -RequiredVersion 1.2.0.0 -Scope CurrentUser -Force
+          Install-Module SqlServer -RequiredVersion 22.4.5.1 -Scope CurrentUser -Force
+      - run: ./tests/Module.Tests.ps1
