@@ -129,16 +129,13 @@ function Get-TitanToken($cfg) {
     appType           = $appType
   } | ConvertTo-Json
 
-  try {
-    $response = Invoke-RestMethod -Method Post -Uri ($base.TrimEnd('/') + $loginPath) -Body $body `
-      -ContentType 'application/json' -TimeoutSec $cfg.titan.timeout_sec
-    if ($response.statusCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($response.token)) {
-      Write-Host ('Get-TitanToken: ok (user {0})' -f $response.userName)
-      return $response.token
-    }
-    Write-Host ('Get-TitanToken: login rejected - statusCode={0} msg={1}' -f $response.statusCode, $response.statusMessage)
+  $response = Invoke-RestMethod -Method Post -Uri ($base.TrimEnd('/') + $loginPath) -Body $body `
+    -ContentType 'application/json' -TimeoutSec $cfg.titan.timeout_sec
+  if ($response.statusCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($response.token)) {
+    Write-Host ('Get-TitanToken: ok (user {0})' -f $response.userName)
+    return $response.token
   }
-  catch { Write-Host ('Get-TitanToken: login error - {0}' -f $_.Exception.Message) }
+  Write-Host ('Get-TitanToken: login rejected - statusCode={0} msg={1}' -f $response.statusCode, $response.statusMessage)
   return $null
 }
 

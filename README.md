@@ -15,7 +15,7 @@ Settings use a DataAgent `src` entry and `keepdays`, `purgefiles`, `filename_dat
 
 The client omits null/blank fields while retaining payload property order. The transient `.titan-orders.json` holds exact JSON wire strings and is removed after the send pass. A payload change has a different UTF-8 SHA256 identity. A source timestamp change alone does not change that identity.
 
-One login serves a batch. Only application `status = 0` writes an empty acknowledgement marker. An application rejection produces a result and permits later rows. A transport exception produces a failed result, permits later rows, and fails the feed after reporting the batch. A successful HTTP request is not itself application acknowledgement.
+One login serves a batch. Only application `status = 0` writes an empty acknowledgement marker. An application rejection produces a result and permits later rows. An order-post transport exception produces a failed result, permits later rows, and fails the feed after reporting the batch. A login transport exception escapes at the original call site and stops before posting orders. A successful HTTP request is not itself application acknowledgement.
 
 Markers live in the caller's cache, never in the installed package. Names contain UTC timestamps, environment/division scope, provenance (`ack` or `cutover`) and payload hash. Expiry uses that timestamp and the configured `keepdays`, not filesystem mtime. An unexpired marker suppresses both login and POST. After expiry the ordinary source still determines whether a payload is sent again.
 

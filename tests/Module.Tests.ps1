@@ -41,10 +41,14 @@ try {
   Check 'refused file retained' (Test-Path "$legacy/prod-source-$other.cache") $true
 
   $global:TitanCalls = [Collections.Generic.List[object]]::new()
+  $global:TitanLoginThrows = $false
   function global:Invoke-RestMethod {
     param($Method,$Uri,$Body,$ContentType,$Headers,$TimeoutSec)
     $global:TitanCalls.Add([pscustomobject]@{ uri=$Uri; body=$Body; headers=$Headers })
-    if ($Uri -like '*/login') { return [pscustomobject]@{ statusCode=0; token='synthetic'; userName='test' } }
+    if ($Uri -like '*/login') {
+      if ($global:TitanLoginThrows) { throw [TimeoutException]::new('original login timeout') }
+      return [pscustomobject]@{ statusCode=0; token='synthetic'; userName='test' }
+    }
     $id = ($Body | ConvertFrom-Json).externalRefID
     if ($id -eq 'transport') { throw [TimeoutException]::new('original transport failure') }
     [pscustomobject]@{ status=$(if ($id -eq 'rejected') { 1 } else { 0 }); messages=@() }
@@ -79,6 +83,16 @@ try {
   $config.environment='test'
   & $module { param($p,$c) Send-TitanPayloads $p $c } @($body) $config | Out-Null
   Check 'environment cache isolated' ($global:TitanCalls.Count - $before) 2
+  $before = $global:TitanCalls.Count
+  $global:TitanLoginThrows = $true
+  $failure = $null
+  try {
+    & $module { param($p,$c) Send-TitanPayloads $p $c } @('{"externalRefID":"auth","status":"Delivered","location":"test"}') $config | Out-Null
+  } catch { $failure = $_.Exception }
+  Check 'login exception preserved' ($failure -is [TimeoutException]) $true
+  Check 'login timeout message preserved' $failure.Message 'original login timeout'
+  Check 'login failure sends no order' ($global:TitanCalls.Count - $before) 1
+  $global:TitanLoginThrows = $false
 
   $maps = New-Item -ItemType Directory -Path "$root/maps"
   'tmw_code,tmw_tcn,titan_name', 'terminal,T-1,Terminal' | Set-Content "$maps/map-tmw-titan-terminal.csv"
