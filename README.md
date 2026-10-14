@@ -7,7 +7,7 @@ Import-Module TitanIntegration -RequiredVersion 1.0.0
 Invoke-TitanIntegration "$PSScriptRoot/settings.json"
 ```
 
-The module pins DataAgent 0.7.5. Install packages separately from the feed. Give each feed its own settings and working folder. The standard runner writes `yyyyMMdd.log` in that folder.
+The module pins DataAgent 0.7.5, Add-PrefixForLogging 1.0.0.3 and Clear-Files 1.2.0.0. Install packages separately from the feed. Give each feed its own settings and working folder. The standard runner writes `yyyyMMdd.log` in that folder. A SQL source additionally needs SqlServer 22.4.5.1, the source adapter's pin.
 
 Settings use a DataAgent `src` entry and `keepdays`, `purgefiles`, `filename_date_format` / `filename_date_pattern` for log cleanup. Supply `mappings` (a caller-owned directory), `supplier`, `customer`, `environment`, `division`, and `cache.directory`. The CSV filenames and columns match the existing TMW-to-Titan mapping shape. `titan` supplies `base_url`, `email`, `password`, `app_type`, `login_path`, `order_path` and `timeout_sec`. `env:NAME` references are resolved by DataAgent. The source query and recipient routing belong to the caller, not the package.
 

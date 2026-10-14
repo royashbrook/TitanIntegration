@@ -14,4 +14,6 @@ jobs:
       - shell: pwsh
         run: |
           Install-Module DataAgent -RequiredVersion 0.7.5 -Scope CurrentUser -Force
+          Install-Module Add-PrefixForLogging -RequiredVersion 1.0.0.3 -Scope CurrentUser -Force
+          Install-Module Clear-Files -RequiredVersion 1.2.0.0 -Scope CurrentUser -Force
           Publish-Module -Path TitanIntegration -NuGetApiKey ${{ secrets.PS_GALLERY_KEY }}

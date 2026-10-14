@@ -7,7 +7,11 @@
   Copyright = '(c) 2026 royashbrook. All rights reserved.'
   Description = 'Settings-driven order mapping and delivery to the Titan carrier API, with caller-owned mapping files and timestamped payload markers.'
   PowerShellVersion = '7.4'
-  RequiredModules = @(@{ ModuleName = 'DataAgent'; RequiredVersion = '0.7.5' })
+  RequiredModules = @(
+    @{ ModuleName = 'DataAgent'; RequiredVersion = '0.7.5' }
+    @{ ModuleName = 'Add-PrefixForLogging'; RequiredVersion = '1.0.0.3' }
+    @{ ModuleName = 'Clear-Files'; RequiredVersion = '1.2.0.0' }
+  )
   FunctionsToExport = @('Invoke-TitanIntegration', 'New-TitanIntegrationConfig')
   AliasesToExport = @()
   CmdletsToExport = @()
