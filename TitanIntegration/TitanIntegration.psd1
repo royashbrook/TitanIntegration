@@ -4,7 +4,7 @@
   GUID = '4a4a9e15-5c51-423a-b9b5-9f8f209e913a'
   Author = 'Roy Ashbrook'
   CompanyName = 'ashbrook.io'
-  Copyright = '(c) 2026 royashbrook. All rights reserved.'
+  Copyright = '(c) 2026 royashbrook. MIT License.'
   Description = 'Settings-driven order mapping and delivery to the Titan carrier API, with caller-owned mapping files and timestamped payload markers.'
   PowerShellVersion = '7.4'
   RequiredModules = @(
