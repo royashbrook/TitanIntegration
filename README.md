@@ -2,6 +2,17 @@
 
 For a carrier order feed using the Titan API. SQL or another DataAgent source supplies the rows, private CSV mappings normalize them, and the API receives the resulting order payloads. This module does not contain customer labels, mappings, endpoints, credentials or retained state.
 
+## Vendor API documentation
+
+This module targets **Titan Logistics (TFX)**, not Titan Compliance and Fuel Analytics (Edge).
+
+- [Titan Cloud API documentation](https://help.mytitan.net/en_US/api-documentation/titan-cloud-api-documentation) identifies the API references for each product. Titan supplies the TFX specifications as PDF files on request through an Implementations Specialist or Customer Success Manager. The Edge Swagger and legacy API help pages describe a different API.
+- [Carrier order uploads via API](https://help.mytitan.net/en_US/carrier-managed-dispatch-tools/carrier-carrier-comms-dashboard-ccd-scorecards) provides the carrier workflow and directs users to the TFX API specifications.
+
+Obtain the current TFX specification and account setup from Titan before configuring this module. Vendor-supplied PDFs are not redistributed here.
+
+## Usage
+
 ```powershell
 Import-Module TitanIntegration -RequiredVersion 1.0.0
 Invoke-TitanIntegration "$PSScriptRoot/settings.json"
